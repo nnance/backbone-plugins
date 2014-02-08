@@ -21,9 +21,8 @@
   _.extend(Backbone.View.prototype, {
 
     setView: function(view) {
-        this.removeCurrentView();
-        this._currentView = view;
-        this.$el.append(this._currentView.el);
+        this.removeSubViews();
+        this.insertView(view, this.$el);
     },
 
     insertView: function(view, location) {
@@ -40,24 +39,33 @@
             this.$el.append(view.el);
     },
 
-    removeCurrentView: function() {
-        if (this._currentView) {
-            this._currentView.remove();
-            delete this._currentView;
-        }
-    },
-
     removeSubViews: function() {
         _.each(this._subViews, function(subView, i){
             subView.remove();
             delete this._subViews[i];
         }, this);
     },
+
+    serializeForm: function(selector) {
+        var result = {};
+        var fields = this.$(selector).serializeArray();
+        _.each(fields, function(field) {
+            if (result[field.name]) {
+                if (!result[field.name].push) {
+                    result[field.name] = [result[field.name]];
+                }
+                result[field.name].push(field.value || '');
+            } else {
+                result[field.name] = field.value || '';
+            }
+        });
+        return result;
+    },
+
   });
 
     Backbone.View.prototype.remove = _.wrap(Backbone.View.prototype.remove, function(oldRemove) {
         this.removeSubViews();
-        this.removeCurrentView();
         if (oldRemove) oldRemove.call(this);
     });
 
