@@ -28,7 +28,7 @@
     },
 
     formatDate: function(value) {
-      if (_.isNull(value) || _.isUndefined(value))
+      if (_.isNull(value) || _.isUndefined(value) || (_.isString(value) && value.length < 8))
         return '';
       if (this.dateFormat)
         return Moment(value).format(this.dateFormat);
