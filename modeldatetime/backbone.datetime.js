@@ -28,6 +28,8 @@
     },
 
     formatDate: function(value) {
+      if (_.isNull(value) || _.isUndefined(value))
+        return '';
       if (this.dateFormat)
         return Moment(value).format(this.dateFormat);
       else
