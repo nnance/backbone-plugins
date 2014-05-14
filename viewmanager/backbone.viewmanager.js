@@ -22,21 +22,44 @@
 
     setView: function(view) {
         this.removeSubViews();
-        this.insertView(view, this.$el);
+        this.addSubView({view: view, selector: this.$el});
+        return view;
+    },
+
+    getView: function() {
+        if (this._subViews && this._subViews.length > 0)
+            return this._subViews[0];
     },
 
     insertView: function(view, location) {
-        if (!this._subViews)
-            this._subViews = [view];
-        else
-            this._subViews.push(view);
+        return this.addSubView({view: view, selector: location});
+    },
 
-        if (_.isObject(location))
-            location.append(view.el);
-        else if (_.isString(location))
-            this.$(location).append(view.el);
+    addSubView: function(options) {
+        if (!this._subViews)
+            this._subViews = [options.view];
         else
-            this.$el.append(view.el);
+            this._subViews.push(options.view);
+
+        var selector;
+        if (_.isObject(options.selector))
+            selector = options.selector;
+        else if (_.isString(options.selector))
+            selector = this.$(options.selector);
+        else
+            selector = this.$el;
+
+        options.view.render();
+        if (options.location === 'prepend')
+            selector.prepend(options.view.el);
+        else if (options.location === 'before')
+            selector.before(options.view.el);
+        else if (options.location === 'after')
+            selector.after(options.view.el);
+        else
+            selector.append(options.view.el);
+
+        return options.view;
     },
 
     removeSubViews: function() {
