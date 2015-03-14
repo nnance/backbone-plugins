@@ -26,7 +26,7 @@
         this.filestyleOptions = options;
 
         this.$(options.selector).filestyle(options);
-        this.$('.bootstrap-filestyle').append('&nbsp;<a id="filestyleclear" class="btn btn-default hidden">Clear</a>');
+        this.$('.group-span-filestyle').append('<a id="filestyleclear" class="btn btn-default hidden">Clear</a>');
 
         if (this.model && options.binding) {
             this.$('.bootstrap-filestyle input').val(this.model.get(options.binding));
